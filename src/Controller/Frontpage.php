@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Basic\Controller;
 
 use Nyholm\Psr7\Response;
@@ -8,8 +8,12 @@ use Basic\Interface\BasicControllerInterface;
 
 class Frontpage implements BasicControllerInterface
 {
-    public function getResponse(string $name = '', string $lastname = ''): ResponseInterface
+    public function __construct(string $template = 'frontpage')
     {
-        return new Response(200, ['Content-Type' => 'text/html'], 'velkommen til forsiden... ' . $name . ' ' . $lastname);
+    }
+
+    public function getResponse(string $firstname = '', string $lastname = ''): ResponseInterface
+    {
+        return new Response(200, ['Content-Type' => 'text/html'], 'Velkommen på forsiden...' . $firstname . ' ' . $lastname);
     }
 }

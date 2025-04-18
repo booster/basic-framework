@@ -1,37 +1,28 @@
 <?php
+declare(strict_types=1);
 
 namespace Basic\Handler;
 
-use Nyholm\Psr7\Response;
+use Basic\Interface\BasicHandlerInterface;
+use Basic\Provider\HandlerProvider;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class BasicRequestHandler implements RequestHandlerInterface
+readonly class BasicRequestHandler
 {
-
-    public function __construct(private array $middleware_stack = [])
+    public function __construct(private ContainerInterface $container)
     {
     }
 
-    public function setMiddlewareStack(array $middleware_stack): void
+    public function resolveRequest(ServerRequestInterface $request): ?ResponseInterface
     {
-        $this->middleware_stack = $middleware_stack;
-    }
+        /** @var HandlerProvider $request_provider */
+        $request_provider = $this->container->get(HandlerProvider::class);
 
-    /**
-     * @inheritDoc
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $next = current($this->middleware_stack);
+        /** @var BasicHandlerInterface $handler */
+        $handler = $request_provider->getRequestHandler($request->getMethod());
 
-        if (key($this->middleware_stack) === null) {
-            return new Response(404, [], 'Not Found');
-        }
-
-        next($this->middleware_stack);
-
-        return $next->process($request, $this);
+        return $handler?->resolveRequest(request: $request) ?? null;
     }
 }

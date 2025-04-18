@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Basic\Middleware;
 
@@ -11,7 +12,7 @@ use Basic\Dispatcher\RouteDispatcher;
 
 class RouteMiddleware implements MiddlewareInterface
 {
-    public function __construct(private ContainerInterface $container)
+    public function __construct(private readonly ContainerInterface $container)
     {
     }
 

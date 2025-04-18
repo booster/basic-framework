@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Basic\Route;
 
 use Closure;
@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 
 class Router
 {
-    public function __construct(private ContainerInterface $container, private array $registered_routes = [])
+    public function __construct(private array $registered_routes = [])
     {
     }
 
