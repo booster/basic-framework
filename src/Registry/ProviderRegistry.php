@@ -2,22 +2,21 @@
 
 namespace Basic\Registry;
 
-use Basic\Provider\HandlerProvider;
-use Psr\Container\ContainerInterface;
+use Basic\Interface\BasicProviderInterface;
 
 class ProviderRegistry
 {
-    public function __construct(private readonly ContainerInterface $container)
+    public function __construct()
     {
     }
 
-    public function registerProviders(): void
+    /**
+     * @param array<int, BasicProviderInterface> $providers
+     * @return void
+     */
+    public function configureRegistry(array $providers): void
     {
-        $provider_registry = [
-            $this->container->get(HandlerProvider::class),
-        ];
-
-        foreach ($provider_registry as $provider) {
+        foreach ($providers as $provider) {
             $provider->register();
         }
     }

@@ -92,7 +92,8 @@ class BootstrapApp
     {
         /** @var ProviderRegistry $provider_registry */
         $provider_registry = $this->container->get(ProviderRegistry::class);
-
-        $provider_registry->registerProviders();
+        $provider_registry->configureRegistry([
+            $this->container->get(HandlerProvider::class)
+        ]);
     }
 }
