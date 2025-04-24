@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Basic\Handler;
 
 use Basic\Interface\BasicHandlerInterface;
+use Basic\Route\RouteModel;
 use Basic\Route\Router;
 use Closure;
 use Nyholm\Psr7\Response;
@@ -19,21 +20,20 @@ readonly class GetHandler implements BasicHandlerInterface
 
     public function resolveRequest(ServerRequestInterface $request): ?ResponseInterface
     {
-        $method = $request->getMethod();
-        $path = $request->getUri()->getPath();
+        /** @var Router $router */
+        $router = $this->container->get(Router::class);
+        $route_model = $router->resolveRoute(method: $request->getMethod(), path: $request->getUri()->getPath());
 
-        $controller = $this->resolveRoute(method: $method, path: $path);
-
-        $params = $request->getQueryParams();
-
-        return $controller ? (call_user_func($controller))->getResponse(...$params) : null;
+        return $route_model ? $this->createResponse(request: $request, router_model: $route_model) : null;
     }
 
-    private function resolveRoute(string $method, string $path): ?Closure
+    private function createResponse(ServerRequestInterface $request, RouteModel $router_model): ResponseInterface
     {
-        /** @var Router $route */
-        $route = $this->container->get(Router::class);
+        $controller = $router_model->getController();
+        $response = $controller->getResponse(...$request->getQueryParams());
 
-        return $route->resolveRoute(method: $method, path: $path);
+        $response = implode(', ', $response); // parse response from controller to template engine of your choice, and remove this line
+
+        return new Response(200, ['Content-Type' => $router_model->getContentType()], $response);
     }
 }

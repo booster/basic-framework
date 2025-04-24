@@ -7,6 +7,7 @@ use Basic\Handler\GetHandler;
 use Basic\Handler\PostHandler;
 use Basic\Provider\HandlerProvider;
 use Basic\Registry\ProviderRegistry;
+use Basic\ResponseTypes\Type;
 use DI\Container;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -76,16 +77,16 @@ class BootstrapApp
         $router = $container->get(Router::class);
 
         $router->get('/contact', function () use ($container) {
-            return $container->get(Contact::class);
-        });
+            return $container->make(Contact::class);
+        }, Type::HTML);
 
         $router->get('/', function () use ($container) {
-            return $container->get(Frontpage::class);
-        });
+            return $container->make(Frontpage::class);
+        }, Type::HTML);
 
         $router->post('/contact', function () use ($container) {
-           return $container->get(Contact::class);
-        });
+            return $container->make(Contact::class);
+        }, Type::JSON);
     }
 
     private function registerProviders(): void

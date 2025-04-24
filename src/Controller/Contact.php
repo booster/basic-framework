@@ -8,9 +8,12 @@ use Psr\Http\Message\ResponseInterface;
 
 class Contact implements BasicControllerInterface
 {
-
-    public function getResponse(string $firstname = ''): ResponseInterface
+    public function __construct(public string $template = 'contact.template')
     {
-        return new Response(200, ['Content-Type' => 'application/json'], json_encode(['hej med dig ' . $firstname]));
+    }
+
+    public function getResponse(string $firstname = ''): array
+    {
+        return ['greeting' => 'Hello there ' . $firstname];
     }
 }

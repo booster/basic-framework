@@ -1,3 +1,5 @@
 .idea
 error_log.log
 vendor
+.phpunit.cache
+composer.lock

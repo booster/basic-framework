@@ -12,8 +12,8 @@ class Frontpage implements BasicControllerInterface
     {
     }
 
-    public function getResponse(string $firstname = '', string $lastname = ''): ResponseInterface
+    public function getResponse(string $firstname = '', string $lastname = ''): array
     {
-        return new Response(200, ['Content-Type' => 'text/html'], 'Velkommen på forsiden...' . $firstname . ' ' . $lastname);
+       return ['greeting' => 'Welcome on the frontpage... ' . $firstname . ' ' . $lastname];
     }
 }

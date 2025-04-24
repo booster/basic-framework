@@ -19,6 +19,13 @@
             "Basic\\": "src/"
         }
     },
+	"autoload-dev": {
+		"psr-4": {
+			"Tests\\": "tests/",
+			"Unit\\": "tests/Unit",
+			"Integration\\": "tests/Integration"
+		}
+	},
     "authors": [
         {
             "name": "Rene Petersen",

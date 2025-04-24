@@ -6,5 +6,5 @@ use Psr\Http\Message\ResponseInterface;
 
 interface BasicControllerInterface
 {
-    public function getResponse(): ResponseInterface;
+    public function getResponse(): array;
 }
