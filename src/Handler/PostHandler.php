@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Basic\Handler;
 
 use Basic\Interface\BasicHandlerInterface;
+use Basic\Responder\ResponderFactory;
 use Basic\Route\RouteModel;
 use Basic\Route\Router;
 use Nyholm\Psr7\Response;
@@ -13,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 readonly class PostHandler implements BasicHandlerInterface
 {
-    public function __construct(private ContainerInterface $container)
+    public function __construct(private ContainerInterface $container, private ResponderFactory $responderFactory)
     {
     }
 
@@ -29,10 +30,15 @@ readonly class PostHandler implements BasicHandlerInterface
     private function createResponse(ServerRequestInterface $request, RouteModel $route_model): ResponseInterface
     {
         $controller = $route_model->getController();
-        $response = $controller->getResponse(...$request->getParsedBody() ?? []);
+        $response = $controller->getResponse(...$request->getQueryParams());
 
-        $response = implode(', ', $response); // parse response from controller to template engine of your choice, and remove this line
+        return $this->formatResponse(request: $request, content: $response);
+    }
 
-        return new Response(200, ['Content-Type' => $route_model->getContentType()], $response);
+    private function formatResponse(ServerRequestInterface $request, array $content): ResponseInterface
+    {
+        $responder = $this->responderFactory->getResponder(request: $request);
+
+        return $responder->respond(request: $request, content: $content);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Basic\Handler;
 
 use Basic\Interface\BasicHandlerInterface;
+use Basic\Interface\ResponderInterface;
+use Basic\Responder\ResponderFactory;
 use Basic\Route\RouteModel;
 use Basic\Route\Router;
 use Closure;
@@ -14,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 readonly class GetHandler implements BasicHandlerInterface
 {
-    public function __construct(private ContainerInterface $container)
+    public function __construct(private ContainerInterface $container, private ResponderFactory $responderFactory)
     {
     }
 
@@ -24,16 +26,21 @@ readonly class GetHandler implements BasicHandlerInterface
         $router = $this->container->get(Router::class);
         $route_model = $router->resolveRoute(method: $request->getMethod(), path: $request->getUri()->getPath());
 
-        return $route_model ? $this->createResponse(request: $request, router_model: $route_model) : null;
+        return $route_model ? $this->createResponse(request: $request, route_model: $route_model) : null;
     }
 
-    private function createResponse(ServerRequestInterface $request, RouteModel $router_model): ResponseInterface
+    private function createResponse(ServerRequestInterface $request, RouteModel $route_model): ResponseInterface
     {
-        $controller = $router_model->getController();
+        $controller = $route_model->getController();
         $response = $controller->getResponse(...$request->getQueryParams());
 
-        $response = implode(', ', $response); // parse response from controller to template engine of your choice, and remove this line
+        return $this->formatResponse(request: $request, content: $response);
+    }
 
-        return new Response(200, ['Content-Type' => $router_model->getContentType()], $response);
+    private function formatResponse(ServerRequestInterface $request, array $content): ResponseInterface
+    {
+        $responder = $this->responderFactory->getResponder(request: $request);
+
+        return $responder->respond(request: $request, content: $content);
     }
 }

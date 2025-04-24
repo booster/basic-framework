@@ -7,6 +7,9 @@ use Basic\Handler\GetHandler;
 use Basic\Handler\PostHandler;
 use Basic\Provider\HandlerProvider;
 use Basic\Registry\ProviderRegistry;
+use Basic\Responder\HtmlResponder;
+use Basic\Responder\JsonResponder;
+use Basic\Responder\ResponderFactory;
 use Basic\ResponseTypes\Type;
 use DI\Container;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -58,6 +61,9 @@ class BootstrapApp
             BasicMiddlewareHandler::class => autowire(BasicMiddlewareHandler::class),
             HandlerProvider::class => autowire(HandlerProvider::class),
             ProviderRegistry::class  => autowire(ProviderRegistry::class),
+            ResponderFactory::class => autowire(ResponderFactory::class),
+            HtmlResponder::class => autowire(HtmlResponder::class),
+            JsonResponder::class => autowire(JsonResponder::class),
         ]);
     }
 
@@ -78,15 +84,15 @@ class BootstrapApp
 
         $router->get('/contact', function () use ($container) {
             return $container->make(Contact::class);
-        }, Type::HTML);
+        });
 
         $router->get('/', function () use ($container) {
             return $container->make(Frontpage::class);
-        }, Type::HTML);
+        });
 
         $router->post('/contact', function () use ($container) {
             return $container->make(Contact::class);
-        }, Type::JSON);
+        });
     }
 
     private function registerProviders(): void

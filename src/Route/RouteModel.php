@@ -3,7 +3,6 @@
 namespace Basic\Route;
 
 use Basic\Interface\BasicControllerInterface;
-use Basic\ResponseTypes\Type;
 use Closure;
 
 readonly class RouteModel
@@ -12,7 +11,6 @@ readonly class RouteModel
         private string $method,
         private string $path,
         private Closure $controller_closure,
-        private Type $content_type,
     )
     {
     }
@@ -23,7 +21,6 @@ readonly class RouteModel
             method: $route['method'],
             path: $route['path'],
             controller_closure: $route['controller_closure'],
-            content_type: $route['content_type']
         );
     }
 
@@ -40,10 +37,5 @@ readonly class RouteModel
     public function getController(): BasicControllerInterface
     {
         return call_user_func($this->controller_closure);
-    }
-
-    public function getContentType(): string
-    {
-        return $this->content_type->value;
     }
 }
