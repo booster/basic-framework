@@ -37,7 +37,7 @@ readonly class PostHandler implements BasicHandlerInterface
 
     private function formatResponse(ServerRequestInterface $request, array $content): ResponseInterface
     {
-        $responder = $this->responderFactory->getResponder(request: $request);
+        $responder = $this->responderFactory->getResponder(serverRequest: $request);
 
         return $responder->respond(request: $request, content: $content);
     }

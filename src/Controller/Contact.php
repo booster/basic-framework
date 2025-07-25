@@ -12,8 +12,8 @@ class Contact implements BasicControllerInterface
     {
     }
 
-    public function getResponse(string $firstname = ''): array
+    public function getResponse(): array
     {
-        return ['greeting' => 'Hello there ' . $firstname];
+        return ['greeting' => 'Hello there '];
     }
 }

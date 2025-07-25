@@ -16,9 +16,9 @@ readonly class ResponderFactory
     {
     }
 
-    public function getResponder(ServerRequestInterface $request): ResponderInterface
+    public function getResponder(ServerRequestInterface $serverRequest): ResponderInterface
     {
-        $accept = $request->getHeaderLine('Accept');
+        $accept = $serverRequest->getHeaderLine('Accept');
 
         $accept_parts = explode(',', $accept);
 

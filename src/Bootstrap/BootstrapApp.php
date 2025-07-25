@@ -3,24 +3,25 @@ declare(strict_types=1);
 namespace Basic\Bootstrap;
 
 use Basic\Controller\Contact;
+use Basic\Controller\Frontpage;
+use Basic\Dispatcher\RouteDispatcher;
+use Basic\Handler\BasicMiddlewareHandler;
 use Basic\Handler\GetHandler;
 use Basic\Handler\PostHandler;
+use Basic\Middleware\RouteMiddleware;
 use Basic\Provider\HandlerProvider;
 use Basic\Registry\ProviderRegistry;
+use Basic\RequestDTO\FrontpageRequestDTO;
+use Basic\RequestDTO\RequestDTOFactory;
 use Basic\Responder\HtmlResponder;
 use Basic\Responder\JsonResponder;
 use Basic\Responder\ResponderFactory;
-use Basic\ResponseTypes\Type;
+use Basic\Route\Router;
 use DI\Container;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Container\ContainerInterface;
-use Basic\Controller\Frontpage;
-use Basic\Dispatcher\RouteDispatcher;
-use Basic\Handler\BasicMiddlewareHandler;
-use Basic\Middleware\RouteMiddleware;
-use Basic\Route\Router;
 use function DI\autowire;
 
 class BootstrapApp
@@ -62,6 +63,8 @@ class BootstrapApp
             HandlerProvider::class => autowire(HandlerProvider::class),
             ProviderRegistry::class  => autowire(ProviderRegistry::class),
             ResponderFactory::class => autowire(ResponderFactory::class),
+            RequestDTOFactory::class => autowire(RequestDTOFactory::class),
+            FrontpageRequestDTO::class => autowire(FrontpageRequestDTO::class),
             HtmlResponder::class => autowire(HtmlResponder::class),
             JsonResponder::class => autowire(JsonResponder::class),
         ]);
@@ -87,6 +90,7 @@ class BootstrapApp
         });
 
         $router->get('/', function () use ($container) {
+            //return $container->make(Frontpage::class, [FrontpageRouteModel::class]);
             return $container->make(Frontpage::class);
         });
 
