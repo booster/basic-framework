@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Basic\Handler;
 
-use Basic\Interface\BasicControllerInterface;
 use Basic\Interface\BasicHandlerInterface;
-use Basic\Interface\RequestDTOInterface;
 use Basic\RequestDTO\RequestDTOFactory;
 use Basic\Responder\ResponderFactory;
 use Basic\Route\RouteModel;
@@ -13,7 +11,6 @@ use Basic\Route\Router;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionMethod;
 
 readonly class GetHandler implements BasicHandlerInterface
 {
@@ -36,8 +33,7 @@ readonly class GetHandler implements BasicHandlerInterface
     private function createResponse(ServerRequestInterface $request, RouteModel $route_model): ResponseInterface
     {
         $controller = $route_model->getController();
-        $requestDTO = $this->getRequestDTO(server_request: $request, controller: $controller);
-
+        $requestDTO = $this->requestDTOFactory->map(server_request: $request, controller: $controller);
         $response = $controller->getResponse($requestDTO);
 
         return $this->formatResponse(request: $request, content: $response);
@@ -49,14 +45,4 @@ readonly class GetHandler implements BasicHandlerInterface
 
         return $responder->respond(request: $request, content: $content);
     }
-
-    private function getRequestDTO(ServerRequestInterface $server_request, BasicControllerInterface $controller): ?RequestDTOInterface
-    {
-        $reflection = new ReflectionMethod($controller, 'getResponse');
-        $params = $reflection->getParameters();
-        $requestDTO = !empty($params) ? $params[0]->getType()?->getName() : null;
-
-        return  $requestDTO ?? class_exists($requestDTO ?? '') ? $this->requestDTOFactory->map(server_request: $server_request, requestDTO: $requestDTO) : null;
-    }
-
 }

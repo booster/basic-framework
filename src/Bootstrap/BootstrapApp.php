@@ -64,7 +64,7 @@ class BootstrapApp
             ProviderRegistry::class  => autowire(ProviderRegistry::class),
             ResponderFactory::class => autowire(ResponderFactory::class),
             RequestDTOFactory::class => autowire(RequestDTOFactory::class),
-            FrontpageRequestDTO::class => autowire(FrontpageRequestDTO::class),
+            FrontpageRequestDTO::class => autowire(FrontpageRequestDTO::class), // not required for the RequestDTO's to be in the container, but you can for DI :)
             HtmlResponder::class => autowire(HtmlResponder::class),
             JsonResponder::class => autowire(JsonResponder::class),
         ]);
@@ -90,12 +90,15 @@ class BootstrapApp
         });
 
         $router->get('/', function () use ($container) {
-            //return $container->make(Frontpage::class, [FrontpageRouteModel::class]);
             return $container->make(Frontpage::class);
         });
 
         $router->post('/contact', function () use ($container) {
             return $container->make(Contact::class);
+        });
+
+        $router->post('/', function () use ($container) {
+            return $container->make(Frontpage::class);
         });
     }
 

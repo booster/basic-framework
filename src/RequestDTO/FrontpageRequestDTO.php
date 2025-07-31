@@ -8,7 +8,7 @@ use InvalidArgumentException;
 class FrontpageRequestDTO implements RequestDTOInterface
 {
 
-    private function __construct(private string $firstname)
+    private function __construct(private readonly string $firstname, private readonly bool $validated)
     {
     }
 
@@ -16,7 +16,7 @@ class FrontpageRequestDTO implements RequestDTOInterface
     {
         $data = self::validateData($data);
 
-        return new self($data['firstname']);
+        return new self($data['firstname'], $data['validated']);
     }
 
     public function getFirstname(): string

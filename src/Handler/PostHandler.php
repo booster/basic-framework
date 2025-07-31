@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Basic\Handler;
 
 use Basic\Interface\BasicHandlerInterface;
+use Basic\RequestDTO\RequestDTOFactory;
 use Basic\Responder\ResponderFactory;
 use Basic\Route\RouteModel;
 use Basic\Route\Router;
@@ -14,7 +15,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 readonly class PostHandler implements BasicHandlerInterface
 {
-    public function __construct(private ContainerInterface $container, private ResponderFactory $responderFactory)
+    public function __construct(
+        private ContainerInterface $container,
+        private ResponderFactory $responderFactory,
+        private RequestDTOFactory $requestDTOFactory)
     {
     }
 
@@ -22,7 +26,7 @@ readonly class PostHandler implements BasicHandlerInterface
     {
         /** @var Router $router */
         $router = $this->container->get(Router::class);
-        $route_model = $router->resolveRoute($request->getMethod(), $request->getUri()->getPath());
+        $route_model = $router->resolveRoute(method: $request->getMethod(), path: $request->getUri()->getPath());
 
         return $route_model ? $this->createResponse(request: $request, route_model: $route_model) : null;
     }
@@ -30,7 +34,8 @@ readonly class PostHandler implements BasicHandlerInterface
     private function createResponse(ServerRequestInterface $request, RouteModel $route_model): ResponseInterface
     {
         $controller = $route_model->getController();
-        $response = $controller->getResponse(...$request->getQueryParams());
+        $requestDTO = $this->requestDTOFactory->map(server_request: $request, controller: $controller);
+        $response = $controller->getResponse($requestDTO);
 
         return $this->formatResponse(request: $request, content: $response);
     }
