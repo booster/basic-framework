@@ -35,7 +35,7 @@ readonly class PostHandler implements BasicHandlerInterface
     {
         $controller = $route_model->getController();
         $requestDTO = $this->requestDTOFactory->map(server_request: $request, controller: $controller);
-        $response = $controller->getResponse($requestDTO);
+        $response = $controller->getResponse(requestDTO: $requestDTO);
 
         return $this->formatResponse(request: $request, content: $response);
     }

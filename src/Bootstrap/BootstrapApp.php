@@ -4,6 +4,7 @@ namespace Basic\Bootstrap;
 
 use Basic\Controller\Contact;
 use Basic\Controller\Frontpage;
+use Basic\Controller\NewContact;
 use Basic\Dispatcher\RouteDispatcher;
 use Basic\Handler\BasicMiddlewareHandler;
 use Basic\Handler\GetHandler;
@@ -54,6 +55,7 @@ class BootstrapApp
         return new Container([
             Frontpage::class => autowire(Frontpage::class),
             Contact::class => autowire(Contact::class),
+            NewContact::class => autowire(NewContact::class),
             RouteMiddleware::class => autowire(RouteMiddleware::class),
             RouteDispatcher::class => autowire(RouteDispatcher::class),
             Router::class => autowire(Router::class),
@@ -94,11 +96,7 @@ class BootstrapApp
         });
 
         $router->post('/contact', function () use ($container) {
-            return $container->make(Contact::class);
-        });
-
-        $router->post('/', function () use ($container) {
-            return $container->make(Frontpage::class);
+            return $container->make(NewContact::class);
         });
     }
 

@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Basic\Controller;
 
 use Basic\Interface\BasicControllerInterface;
-use Basic\RequestDTO\FrontpageRequestDTO;
+use Basic\Interface\RequestDTOInterface;
 
 class Frontpage implements BasicControllerInterface
 {
@@ -11,8 +11,8 @@ class Frontpage implements BasicControllerInterface
     {
     }
 
-    public function getResponse(FrontpageRequestDTO $requestDTO = null): array
+    public function getResponse(): array
     {
-       return ['greeting' => 'Welcome on the frontpage... ' . $requestDTO->getFirstname() . ' :)'];
+       return ['greeting' => 'Welcome on the frontpage... :)'];
     }
 }
