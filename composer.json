@@ -8,7 +8,8 @@
         "nyholm/psr7-server": "^1.1",
         "laminas/laminas-httphandlerrunner": "^2.11",
         "psr/http-server-middleware": "^1.0",
-		"php-di/php-di":">=7.0.9"
+		"php-di/php-di":">=7.0.9",
+        "latte/latte": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^12.1"

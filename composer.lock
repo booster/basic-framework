@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7e85527f4366da82df24784644bc4cf",
+    "content-hash": "0b93b352ce627d0b3cac1e072bfe198a",
     "packages": [
         {
             "name": "laminas/laminas-httphandlerrunner",
@@ -133,6 +133,95 @@
                 "source": "https://github.com/laravel/serializable-closure"
             },
             "time": "2025-03-19T13:51:03+00:00"
+        },
+        {
+            "name": "latte/latte",
+            "version": "v3.0.23",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/latte.git",
+                "reference": "3198a4e336a2a1e535924af11d9a63fbf1650836"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/latte/zipball/3198a4e336a2a1e535924af11d9a63fbf1650836",
+                "reference": "3198a4e336a2a1e535924af11d9a63fbf1650836",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-tokenizer": "*",
+                "php": "8.0 - 8.4"
+            },
+            "conflict": {
+                "nette/application": "<3.1.7",
+                "nette/caching": "<3.1.4"
+            },
+            "require-dev": {
+                "nette/php-generator": "^4.0",
+                "nette/tester": "^2.5",
+                "nette/utils": "^4.0",
+                "phpstan/phpstan-nette": "^2.0@stable",
+                "tracy/tracy": "^2.10"
+            },
+            "suggest": {
+                "ext-fileinfo": "to use filter |datastream",
+                "ext-iconv": "to use filters |reverse, |substring",
+                "ext-intl": "to use Latte\\Engine::setLocale()",
+                "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
+                "nette/php-generator": "to use tag {templatePrint}",
+                "nette/utils": "to use filter |webalize"
+            },
+            "bin": [
+                "bin/latte-lint"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Latte\\": "src/Latte"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0-only",
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "☕ Latte: the intuitive and fast template engine for those who want the most secure PHP sites. Introduces context-sensitive escaping.",
+            "homepage": "https://latte.nette.org",
+            "keywords": [
+                "context-sensitive",
+                "engine",
+                "escaping",
+                "html",
+                "nette",
+                "security",
+                "template",
+                "twig"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/latte/issues",
+                "source": "https://github.com/nette/latte/tree/v3.0.23"
+            },
+            "time": "2025-07-17T01:01:46+00:00"
         },
         {
             "name": "nyholm/psr7",
