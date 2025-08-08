@@ -12,4 +12,9 @@ class NewContact implements BasicControllerInterface
     {
         return ['status' => 200, 'message' => 'Contact created: ' . $requestDTO->getFullName()];
     }
+
+    public function getTemplate(): ?string
+    {
+        return null;
+    }
 }

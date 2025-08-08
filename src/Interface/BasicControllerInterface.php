@@ -7,4 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 interface BasicControllerInterface
 {
     public function getResponse(): array;
+
+    public function getTemplate(): ?string;
 }

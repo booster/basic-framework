@@ -36,13 +36,13 @@ readonly class GetHandler implements BasicHandlerInterface
         $requestDTO = $this->requestDTOFactory->map(server_request: $request, controller: $controller);
         $response = $controller->getResponse($requestDTO);
 
-        return $this->formatResponse(request: $request, content: $response);
+        return $this->formatResponse(request: $request, content: $response, template: $controller->getTemplate());
     }
 
-    private function formatResponse(ServerRequestInterface $request, array $content): ResponseInterface
+    private function formatResponse(ServerRequestInterface $request, array $content, string $template): ResponseInterface
     {
         $responder = $this->responderFactory->getResponder(serverRequest: $request);
 
-        return $responder->respond(request: $request, content: $content);
+        return $responder->respond(request: $request, content: $content, template: $template);
     }
 }

@@ -6,9 +6,11 @@ use Basic\Controller\Contact;
 use Basic\Controller\Frontpage;
 use Basic\Controller\NewContact;
 use Basic\Dispatcher\RouteDispatcher;
+use Basic\Facade\View;
 use Basic\Handler\BasicMiddlewareHandler;
 use Basic\Handler\GetHandler;
 use Basic\Handler\PostHandler;
+use Basic\Interface\TemplateEngine;
 use Basic\Middleware\RouteMiddleware;
 use Basic\Provider\HandlerProvider;
 use Basic\Registry\ProviderRegistry;
@@ -18,6 +20,7 @@ use Basic\Responder\HtmlResponder;
 use Basic\Responder\JsonResponder;
 use Basic\Responder\ResponderFactory;
 use Basic\Route\Router;
+use Basic\TemplateEngine\LatteEngine;
 use DI\Container;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -35,6 +38,7 @@ class BootstrapApp
         $this->registerMiddleware();
         $this->registerRoutes();
         $this->registerProviders();
+        $this->registerViewFacade();
     }
 
     public function run(): bool
@@ -69,6 +73,9 @@ class BootstrapApp
             FrontpageRequestDTO::class => autowire(FrontpageRequestDTO::class), // not required for the RequestDTO's to be in the container, but you can for DI :)
             HtmlResponder::class => autowire(HtmlResponder::class),
             JsonResponder::class => autowire(JsonResponder::class),
+            TemplateEngine::class => function () {
+                return new LatteEngine(dirname(__FILE__, 2) . '/TemplateEngine');
+            }
         ]);
     }
 
@@ -105,7 +112,12 @@ class BootstrapApp
         /** @var ProviderRegistry $provider_registry */
         $provider_registry = $this->container->get(ProviderRegistry::class);
         $provider_registry->configureRegistry([
-            $this->container->get(HandlerProvider::class)
+            $this->container->get(HandlerProvider::class),
         ]);
+    }
+
+    private function registerViewFacade(): void
+    {
+        View::setInstance($this->container->get(TemplateEngine::class));
     }
 }
