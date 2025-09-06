@@ -7,12 +7,12 @@ use Basic\Interface\RequestDTOInterface;
 class FrontpageRequestDTO implements RequestDTOInterface
 {
 
-    private function __construct()
+    private function __construct(private readonly ?string $firstname)
     {
     }
 
-    public static function fromArray(): FrontpageRequestDTO
+    public static function fromArray(array $data): FrontpageRequestDTO
     {
-        return new self();
+        return new self($data['firstname'] ?? '');
     }
 }

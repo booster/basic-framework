@@ -5,6 +5,7 @@ namespace Basic\RequestDTO;
 use Basic\Interface\BasicControllerInterface;
 use Basic\Interface\RequestDTOFactoryInterface;
 use Basic\Interface\RequestDTOInterface;
+use Basic\RequestDTOValidation\RequestDTOValidator;
 use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -14,6 +15,9 @@ use ReflectionNamedType;
 
 class RequestDTOFactory implements RequestDTOFactoryInterface
 {
+    public function __construct(private RequestDTOValidator $request_dto_validator)
+    {
+    }
 
     public function map(ServerRequestInterface $server_request, BasicControllerInterface $controller): ?RequestDTOInterface
     {
@@ -58,47 +62,11 @@ class RequestDTOFactory implements RequestDTOFactoryInterface
         };
     }
 
-    private function createRequestDTO(ServerRequestInterface $server_request, string $requestDTO)
+    private function createRequestDTO(ServerRequestInterface $server_request, string $requestDTO): RequestDTOInterface
     {
-        $requestData = $this->unpackRequestParams(server_request: $server_request);
-
-        try {
-            $reflectionClass = new ReflectionClass($requestDTO);
-
-            foreach ($reflectionClass->getConstructor()->getParameters() as $parameter) {
-                $paramName = $parameter->getName();
-                $paramType = $parameter->getType();
-                $paramTypeName = $paramType?->getName();
-
-                if (!$paramType instanceof ReflectionNamedType) {
-                    continue; // Union types or complex types is skipped
-                }
-
-                $hasValue = $requestData[$paramName] ?? null;
-
-                if ($hasValue === null && $parameter->isOptional() === false) {
-                    throw new InvalidArgumentException('Missing required parameter: ' . $paramName);
-                }
-
-                // Nullable and null is OK
-                if ($hasValue === null && $paramType->allowsNull()) {
-                    continue;
-                }
-
-                $requestDataType = get_debug_type($requestData[$paramName]);
-                if ($hasValue !== null && $requestDataType !== $paramTypeName) {
-                    throw new InvalidArgumentException('Parameter ' . $paramName . ' is wrong type, was expecting ' . $paramTypeName . ' but got ' . $requestDataType);
-                }
-            }
-
-            $uninitializedRequestDTO = $reflectionClass->newInstanceWithoutConstructor();
-
-            return $uninitializedRequestDTO::fromArray($requestData);
-
-        } catch (Exception $exception) {
-            // custom error handler here...
-            echo $exception->getMessage();
-            exit;
-        }
+        return $this->request_dto_validator->validate(
+            requestDTO: $requestDTO,
+            requestData: $this->unpackRequestParams(server_request: $server_request)
+        );
     }
 }

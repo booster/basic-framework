@@ -16,6 +16,10 @@ use Basic\Provider\HandlerProvider;
 use Basic\Registry\ProviderRegistry;
 use Basic\RequestDTO\FrontpageRequestDTO;
 use Basic\RequestDTO\RequestDTOFactory;
+use Basic\RequestDTOValidation\RequestDTONullableRule;
+use Basic\RequestDTOValidation\RequestDTORequiredRule;
+use Basic\RequestDTOValidation\RequestDTOTypeRule;
+use Basic\RequestDTOValidation\RequestDTOValidator;
 use Basic\Responder\HtmlResponder;
 use Basic\Responder\JsonResponder;
 use Basic\Responder\ResponderFactory;
@@ -66,6 +70,13 @@ class BootstrapApp
             GetHandler::class => autowire(GetHandler::class),
             PostHandler::class => autowire(PostHandler::class),
             BasicMiddlewareHandler::class => autowire(BasicMiddlewareHandler::class),
+            RequestDTOValidator::class => function () {
+                return new RequestDTOValidator(
+                    new RequestDTONullableRule(),
+                    new RequestDTORequiredRule(),
+                    new RequestDTOTypeRule(),
+                );
+            },
             HandlerProvider::class => autowire(HandlerProvider::class),
             ProviderRegistry::class  => autowire(ProviderRegistry::class),
             ResponderFactory::class => autowire(ResponderFactory::class),
