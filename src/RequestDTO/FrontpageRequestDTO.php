@@ -13,6 +13,11 @@ class FrontpageRequestDTO implements RequestDTOInterface
 
     public static function fromArray(array $data): FrontpageRequestDTO
     {
-        return new self($data['firstname'] ?? '');
+        return new self(firstname: $data['firstname'] ?? null);
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname ?? null;
     }
 }
