@@ -5,15 +5,15 @@ namespace Basic\Controller;
 use Basic\Interface\BasicControllerInterface;
 use Basic\RequestDTO\FrontpageRequestDTO;
 
-class Frontpage implements BasicControllerInterface
+readonly class Frontpage implements BasicControllerInterface
 {
-    public function __construct(private readonly string $template = 'frontpage.latte')
+    public function __construct(private string $template = 'frontpage.latte')
     {
     }
 
-    public function getResponse(FrontpageRequestDTO $frontpageRequestDTO = null): array
+    public function getResponse(?FrontpageRequestDTO $frontpageRequestDTO = null): array
     {
-       return ['greeting' => 'Welcome on the frontpage... :)'];
+       return ['greeting' => 'Welcome on the frontpage... :) '. $frontpageRequestDTO->getFirstname()];
     }
 
     public function getTemplate(): string

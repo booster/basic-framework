@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Basic\Handler;
 
+use Basic\Dispatcher\RequestProviderDispatcher;
 use Basic\Interface\BasicHandlerInterface;
 use Basic\Provider\HandlerProvider;
 use Psr\Container\ContainerInterface;
@@ -17,8 +18,8 @@ readonly class BasicRequestHandler
 
     public function resolveRequest(ServerRequestInterface $request): ?ResponseInterface
     {
-        /** @var HandlerProvider $request_provider */
-        $request_provider = $this->container->get(HandlerProvider::class);
+        /** @var RequestProviderDispatcher $request_provider */
+        $request_provider = $this->container->get(RequestProviderDispatcher::class);
 
         /** @var BasicHandlerInterface $handler */
         $handler = $request_provider->getRequestHandler($request->getMethod());
